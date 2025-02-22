@@ -1,0 +1,21 @@
+  version: 3
+  tasks:
+    default:
+      cmds:
+        - task -l
+      desc: Lists all available tasks
+
+    install-deps:
+      desc: Install all dependencies
+      cmds:
+        - cd data-generator && pip install -r requirements.txt
+
+    docker:up:
+      desc: Starts all docker containers
+      cmds:
+        - docker-compose -f docker/docker-compose.yml up -d
+
+    docker:down:
+      desc: Stops all docker containers
+      cmds:
+        - docker-compose -f docker/docker-compose.yml down
