@@ -1,31 +1,44 @@
-  version: 3
-  tasks:
-    default:
-      cmds:
-        - task -l
-      desc: Lists all available tasks
+version: 3
+tasks:
+  default:
+    cmds:
+      - task -l
+    desc: Lists all available tasks
 
-    install-deps:
-      desc: Install all dependencies
-      cmds:
-        - cd data-generator && pip install -r requirements.txt
+  install-deps:
+    desc: Install all dependencies
+    cmds:
+      - cd data-generator && pip install -r requirements.txt
 
-    docker:up:
-      desc: Starts all docker containers
-      cmds:
-        - docker-compose -f docker/docker-compose.yml up -d
+  docker:up:
+    desc: Starts all docker containers
+    cmds:
+      - docker-compose -f docker/docker-compose.yml up -d
 
-    docker:down:
-      desc: Stops all docker containers
-      cmds:
-        - docker-compose -f docker/docker-compose.yml down
+  docker:down:
+    desc: Stops all docker containers
+    cmds:
+      - docker-compose -f docker/docker-compose.yml down
 
-    kafka:create-topics:
-      desc: Create Kakfa topics
-      cmds:
-        - chmod +x scripts/kafka/create-topics.sh
-        - scripts/kafka/create-topics.sh
-    clickhouse:init:
-      desc: Initializes ClickHouse tables
-      cmds:
-        - docker exec -i clickhouse-server clickhouse-client --multiquery < scripts/clickhouse/init.sql
+  kafka:create-topics:
+    desc: Create Kakfa topics
+    cmds:
+      - chmod +x scripts/kafka/create-topics.sh
+      - scripts/kafka/create-topics.sh
+
+  clickhouse:init:
+    desc: Initializes ClickHouse tables
+    cmds:
+      - docker exec -i clickhouse-server clickhouse-client --multiquery < scripts/clickhouse/init.sql
+
+  superset:init:
+    desc: Initialize superset with admin user
+    cmds:
+      - docker exec -it superset superset fab create-admin
+        --username admin
+        --firstname Ro
+        --lastname Vo
+        --email ngocro208@gmail.com
+        --password admin
+      - docker exec -it superset superset db upgrade
+      - docker exec -it superset superset init
