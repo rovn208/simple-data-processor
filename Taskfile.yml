@@ -19,3 +19,13 @@
       desc: Stops all docker containers
       cmds:
         - docker-compose -f docker/docker-compose.yml down
+
+    kafka:create-topics:
+      desc: Create Kakfa topics
+      cmds:
+        - chmod +x scripts/kafka/create-topics.sh
+        - scripts/kafka/create-topics.sh
+    clickhouse:init:
+      desc: Initializes ClickHouse tables
+      cmds:
+        - docker exec -i clickhouse-server clickhouse-client --multiquery < scripts/clickhouse/init.sql
