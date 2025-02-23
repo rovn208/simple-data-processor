@@ -28,8 +28,6 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-    depends_on:
-      - zookeeper
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "9092" ]
       interval: 30s

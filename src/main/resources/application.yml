@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: sdp
+  kafka:
+    bootstrap-servers: localhost:9092
+    streams:
+      application-id: ${spring.application.name}
+      properties:
+        processing.guarantee: exactly_once_v2
+        commit.interval.ms: 1000
+        state.dir: /tmp/kafka-streams
+
+kafka:
+  topics:
+    input: my_events
+    output: enriched_events
+    averages: country_event_averages
+    dlq: dlq
+sdp:
+  supported-countries: US,CA,UK,DE,FR,JP
+
+logging:
+  level:
+    root: INFO
+    sdp: DEBUG 
