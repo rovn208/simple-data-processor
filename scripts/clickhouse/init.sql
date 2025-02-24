@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS events
     user_id     Int64,
     page_url    String,
     button_id   String,
-    timestamp   DateTime,
+    timestamp   DATETIME('UTC'),
     country     String,
     device_type Nullable(String)
 ) ENGINE = MergeTree()
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS events_queue
     user_id     Int64,
     page_url    String,
     button_id   String,
-    timestamp   DateTime,
+    timestamp   DateTime('UTC'),
     country     String,
     device_type Nullable(String)
 ) ENGINE = Kafka
@@ -43,8 +43,8 @@ FROM events_queue;
 CREATE TABLE IF NOT EXISTS country_event_averages_raw
 (
     country        String,
-    window_start   DateTime,
-    window_end     DateTime,
+    window_start   DateTime('UTC'),
+    window_end     DateTime('UTC'),
     average_events Float64
 ) ENGINE = MergeTree()
       ORDER BY (window_start, country);
@@ -53,8 +53,8 @@ CREATE TABLE IF NOT EXISTS country_event_averages_raw
 CREATE TABLE IF NOT EXISTS country_event_averages_queue
 (
     country        String,
-    window_start   DateTime,
-    window_end     DateTime,
+    window_start   DateTime('UTC'),
+    window_end     DateTime('UTC'),
     average_events Float64
 ) ENGINE = Kafka
       SETTINGS kafka_broker_list = 'kafka:29092',
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS dlq_table
 (
     error_message String,
     raw_data      String,
-    timestamp     DateTime DEFAULT now()
+    timestamp     DateTime('UTC') DEFAULT now()
 ) ENGINE = MergeTree()
       ORDER BY timestamp;
 
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS dlq_queue
 (
     error_message String,
     raw_data      String,
-    timestamp     DateTime
+    timestamp     DateTime('UTC')
 ) ENGINE = Kafka
       SETTINGS kafka_broker_list = 'kafka:29092',
           kafka_topic_list = 'dlq',

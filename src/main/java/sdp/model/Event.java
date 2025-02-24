@@ -24,5 +24,5 @@ public class Event {
 
     private String country;
 
-    private Long timestamp;
+    private String timestamp;
 }

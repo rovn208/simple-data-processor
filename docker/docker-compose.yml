@@ -53,6 +53,9 @@ services:
     ports:
       - "8123:8123"
       - "9000:9000"
+    environment:
+      CLICKHOUSE_USER: admin
+      CLICKHOUSE_PASSWORD: secret
     volumes:
       - ./clickhouse/data:/var/lib/clickhouse
       - ./clickhouse/logs:/var/log/clickhouse-server
@@ -78,6 +81,10 @@ services:
       SUPERSET_SECRET_KEY: secret
     volumes:
       - ./superset:/app/superset_home
+      - ./superset-init.sh:/app/init.sh
+    user: "root"  # Temporarily run as root
+    command: >
+      bash -c "/app/init.sh"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8088/health" ]
       interval: 30s

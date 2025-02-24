@@ -1,9 +1,9 @@
 version: 3
 tasks:
   default:
+    desc: Lists all available tasks
     cmds:
       - task -l
-    desc: Lists all available tasks
 
   install-deps:
     desc: Install all dependencies
@@ -42,3 +42,14 @@ tasks:
         --password admin
       - docker exec -it superset superset db upgrade
       - docker exec -it superset superset init
+      # SQL CONSTR: clickhouse+connect://default@clickhouse-server:8123/default
+
+  build:
+    desc: Build the application
+    cmds:
+      - ./gradlew clean build
+
+  run:
+    desc: Run the application
+    cmds:
+      - ./gradlew bootRun

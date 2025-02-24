@@ -14,5 +14,5 @@ public class DeadLetterQueueRecord {
     @JsonProperty("raw_data")
     private String rawData;
 
-    private Long timestamp;
+    private String timestamp;
 } 

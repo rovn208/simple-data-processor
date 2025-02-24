@@ -13,8 +13,10 @@ import sdp.config.SDPProperties;
 import sdp.model.CountryEventAverage;
 import sdp.model.DeadLetterQueueRecord;
 import sdp.model.Event;
+import sdp.util.DateUtil;
 
 import java.time.Duration;
+import java.time.Instant;
 
 @Slf4j
 @Component
@@ -38,9 +40,6 @@ public class EventStreamProcessor {
                 .split()
                 .branch(isValidEvent(), Branched.withConsumer(this::processValidEvents))
                 .defaultBranch(Branched.withConsumer(this::processInvalidEvents));
-
-        sourceStream.print(Printed.toSysOut());
-
     }
 
     private Predicate<String, Event> isValidEvent() {
@@ -68,7 +67,7 @@ public class EventStreamProcessor {
                 Produced.with(Serdes.String(), jsonSerdesConfig.event())
         );
 
-        // Calculate 5-minute rolling averages by country
+        // Calculate rolling averages by country
         validEvents
                 .groupByKey()
                 .windowedBy(TimeWindows.of(Duration.ofMinutes(AGGREGATION_DURATION_IN_MINUTES)))
@@ -76,10 +75,12 @@ public class EventStreamProcessor {
                 .toStream()
                 .mapValues((window, count) -> CountryEventAverage.builder()
                         .country(window.key())
-                        .windowStart(window.window().startTime().toString())
-                        .windowEnd(window.window().endTime().toString())
-                        .averageEvents((double) count / AGGREGATION_DURATION_IN_MINUTES) // events per minute
-                        .build())
+                        .windowStart(DateUtil.formatDate(window.window().startTime().toEpochMilli()))
+                        .windowEnd(DateUtil.formatDate(window.window().endTime().toEpochMilli()))
+                        .averageEvents((double) count / AGGREGATION_DURATION_IN_MINUTES)
+                        .build()
+                )
+                .peek((key, value) -> System.out.println("Value " + value))
                 .to(
                         kafkaProperties.getAverages(),
                         Produced.with(
@@ -95,7 +96,7 @@ public class EventStreamProcessor {
                         .errorMessage("Invalid event: " +
                                 (event.getUserId() < 0 ? "negative user_id" : "invalid country"))
                         .rawData(event.toString())
-                        .timestamp(System.currentTimeMillis())
+                        .timestamp(DateUtil.formatDate(Instant.now().toEpochMilli()))
                         .build())
                 .to(
                         kafkaProperties.getDlq(),
