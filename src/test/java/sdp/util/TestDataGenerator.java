@@ -11,7 +11,7 @@ public class TestDataGenerator {
         event.setUserId(123L);
         event.setPageUrl("/test");
         event.setButtonId("btn-1");
-        event.setTimestamp(Instant.now().getEpochSecond());
+        event.setTimestamp(DateUtil.formatDate(Instant.now().toEpochMilli()));
         event.setCountry("US");
         event.setDeviceType("mobile");
         return event;
@@ -23,7 +23,7 @@ public class TestDataGenerator {
         event.setUserId(-1L); // Invalid user ID
         event.setPageUrl("/test");
         event.setButtonId("btn-1");
-        event.setTimestamp(Instant.now().getEpochSecond());
+        event.setTimestamp(DateUtil.formatDate(Instant.now().toEpochMilli()));
         event.setCountry("ZZ"); // Invalid country
         event.setDeviceType("mobile");
         return event;

@@ -80,7 +80,6 @@ public class EventStreamProcessor {
                         .averageEvents((double) count / AGGREGATION_DURATION_IN_MINUTES)
                         .build()
                 )
-                .peek((key, value) -> System.out.println("Value " + value))
                 .to(
                         kafkaProperties.getAverages(),
                         Produced.with(

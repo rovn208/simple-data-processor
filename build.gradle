@@ -24,7 +24,7 @@ repositories {
 }
 
 ext {
-    testcontainersVersion = '1.20.5'
+    awaitilityVersion = '4.2.0'
 }
 
 dependencies {
@@ -34,10 +34,10 @@ dependencies {
     // Kafka Streams
     implementation 'org.apache.kafka:kafka-streams'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.kafka:spring-kafka-test'
 
     // JSON Processing
     implementation "com.fasterxml.jackson.core:jackson-databind"
-
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'
@@ -46,6 +46,10 @@ dependencies {
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation "org.apache.kafka:kafka-streams-test-utils"
+
+    // Integration Testing
+    testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
 }
 
 tasks.named('bootBuildImage') {

@@ -1,9 +1,10 @@
-import json
-import time
-import random
-import uuid
 import argparse
+import json
+import random
+import time
+import uuid
 from kafka import KafkaProducer
+
 
 def generate_event(include_device_type=False, generate_bad_data=False):
     event_type = random.choice(["page_view", "button_click"])
@@ -13,9 +14,9 @@ def generate_event(include_device_type=False, generate_bad_data=False):
     page_url = f"/page/{random.randint(1, 100)}"
     button_id = str(uuid.uuid4())
     timestamp = int(time.time())
-    country = random.choice(["US", "CA", "UK", "DE", "FR", "JP", "XX"]) # XX is invalid
+    country = random.choice(["US", "CA", "UK", "DE", "FR", "JP", "XX"])  # XX is invalid
     if generate_bad_data and random.random() < 0.05:
-      country = "ZZ" # very invalid.
+        country = "ZZ"  # very invalid.
 
     event = {
         "event_type": event_type,
