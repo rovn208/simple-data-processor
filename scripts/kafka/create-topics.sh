@@ -17,7 +17,7 @@ docker exec -i kafka kafka-topics --create --if-not-exists \
 docker exec -i kafka kafka-topics --create --if-not-exists \
   --bootstrap-server kafka:9092 \
   --topic dlq \
-  --partitions 1 \
+  --partitions 3 \
   --replication-factor 1
 
 # Create country_event_averages topic

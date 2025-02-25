@@ -59,7 +59,6 @@ class EventStreamProcessorIntegrationTest {
     private EmbeddedKafkaBroker embeddedKafka;
 
     private ObjectMapper objectMapper = new ObjectMapper();
-
     private Producer<Object, Object> producer;
     private Consumer<String, Event> enrichedConsumer;
     private Consumer<Windowed<String>, CountryEventAverage> averagesConsumer;
