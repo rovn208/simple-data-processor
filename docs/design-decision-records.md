@@ -67,6 +67,36 @@ Processor.
 }
 ```
 
+## Kafka Streams aggregation vs ClickHouse materialized views
+
+Kafka Streams aggregation is a good choice for real-time aggregation of events
+from Kafka. However, it requires additional cost to re-calculate, handle updates
+to exisiting aggregations and ensure consistency between raw and aggregated
+data.
+
+- Additional cost to re-calculate
+- Better handling of late-arriving data
+- Complex transformation and business logic
+- Handle updates to exisiting aggregations
+- Ensure consistency between raw and aggregated data
+
+---
+
+On the other hand, ClickHouse materialized views automatically maintain these
+aggregations without additional cost to re-calculate, handle updates to
+exisiting aggregations and ensure consistency between raw and aggregated data.
+
+- No additional cost to re-calculate
+- Less flexible windowing options
+- Basic aggregation operations only
+- No need to handle updates to exisiting aggregations
+- No need to ensure consistency between raw and aggregated data
+
+---
+
+Since we only consume events from Data Generator, I let ClickHouse materialized
+views maintain the daily active users as it just a simple grouping query.
+
 ## Database schema
 
 Since we need to consume events from Kafka and put them into ClickHouse, we need
