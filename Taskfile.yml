@@ -5,6 +5,15 @@ tasks:
     cmds:
       - task -l
 
+  setup:
+    desc: Sets up the entire development environment
+    cmds:
+      - task: docker:up
+      - sleep 20  # Wait for services to be ready especially superset and kafka
+      - task: kafka:create-topics
+      - task: clickhouse:init
+      - task: install-deps
+
   install-deps:
     desc: Install all dependencies
     cmds:
@@ -42,7 +51,6 @@ tasks:
         --password admin
       - docker exec -it superset superset db upgrade
       - docker exec -it superset superset init
-      # SQL CONSTR: clickhouse+connect://default@clickhouse-server:8123/default
 
   build:
     desc: Build the application
@@ -53,3 +61,8 @@ tasks:
     desc: Run the application
     cmds:
       - ./gradlew bootRun
+
+  data-generator:start:
+    desc: Starts the data generator
+    cmds:
+      - cd data-generator && python data_generator.py
